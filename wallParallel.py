@@ -3,10 +3,17 @@ from time import sleep
 
 m = ev3.LargeMotor('outA')
 n = ev3.LargeMotor('outB')
-m.run_timed(time_sp=3000, speed_sp=500)
-
-
+desiredValue = 200
+#Primitive controller, unstable
 while True:
-    m.run_timed(time_sp=1000, speed_sp=100)
-    n.run_timed(time_sp=1000, speed_sp=100)
-    sleep(2)
+    s = ev3.UltrasonicSensor('in4')
+    actualValue = s.value()
+    if actualValue > desiredValue:
+        m.run_timed(time_sp=500, speed_sp=-250)
+        n.run_timed(time_sp=500, speed_sp=-150)
+    elif actualValue < desiredValue:
+        m.run_timed(time_sp=500, speed_sp=-150)
+        n.run_timed(time_sp=500, speed_sp=-250)
+    elif actualValue == desiredValue:
+        m.run_timed(time_sp=500, speed_sp=-250)
+        n.run_timed(time_sp=500, speed_sp=-250)
